@@ -8,6 +8,7 @@ var cors = require('cors');
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
 var patientsRouter = require('./routes/patients');
+var dummyRouter = require('./routes/dummy');
 
 var app = express();
 
@@ -21,6 +22,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
 app.use('/patients', patientsRouter);
+app.use('/dummy', dummyRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
@@ -36,10 +38,6 @@ app.use(function(err, req, res, next) {
   // render the error page
   res.status(err.status || 500);
   res.render('error');
-});
-
-app.listen(3000,function(){
-  console.log('Server is running on port 3000');
 });
 
 module.exports = app;
