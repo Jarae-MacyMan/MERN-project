@@ -7,52 +7,32 @@ function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
 }
 
-export default function ListView({ people }) {
+export default function ListView({ exams }) {
   return (
     <ul role="list" className="divide-y divide-gray-100">
-      {people.map((person, index) => (
-        <li key={person.email} className="flex justify-between gap-x-6 py-5">
+      {exams.map((exam, index) => (
+        <li key={exam._id} className="flex justify-between gap-x-6 py-5">
           <div className="flex min-w-0 gap-x-4">
             <img
               className="h-12 w-12 flex-none rounded-full bg-gray-50"
-              src={person.imageUrl}
+              src={exam.imageURL}
               alt=""
             />
             <div className="min-w-0 flex-auto">
               <p className="text-sm font-semibold leading-6 text-gray-900">
-                <Link to={`/detail/${index}`} className="hover:underline">
-                  {person.name}
-                </Link>
+                Exam ID: {exam.examId}
               </p>
-              <p className="mt-1 flex text-xs leading-5 text-gray-500">
-                <a
-                  href={`mailto:${person.email}`}
-                  className="truncate hover:underline"
-                >
-                  {person.email}
-                </a>
-              </p>
+              <div className="mt-1 flex flex-col text-xs leading-5 text-gray-500">
+                <span>Patient ID: {exam.patientId}</span>
+                <span>Age: {exam.age} - Sex: {exam.sex}</span>
+                <span>Zip Code: {exam.zipCode}</span>
+                <span>BMI: {exam.bmi}</span>
+                <span>Key Findings: {exam.keyFindings}</span>
+                <span>Brixia Scores: {exam.brixiaScores}</span>
+              </div>
             </div>
           </div>
           <div className="flex shrink-0 items-center gap-x-6">
-            <div className="hidden sm:flex sm:flex-col sm:items-end">
-              <p className="text-sm leading-6 text-gray-900">{person.role}</p>
-              {person.lastSeen ? (
-                <p className="mt-1 text-xs leading-5 text-gray-500">
-                  Last seen{" "}
-                  <time dateTime={person.lastSeenDateTime}>
-                    {person.lastSeen}
-                  </time>
-                </p>
-              ) : (
-                <div className="mt-1 flex items-center gap-x-1.5">
-                  <div className="flex-none rounded-full bg-emerald-500/20 p-1">
-                    <div className="h-1.5 w-1.5 rounded-full bg-emerald-500" />
-                  </div>
-                  <p className="text-xs leading-5 text-gray-500">Online</p>
-                </div>
-              )}
-            </div>
             <Menu as="div" className="relative flex-none">
               <Menu.Button className="-m-2.5 block p-2.5 text-gray-500 hover:text-gray-900">
                 <span className="sr-only">Open options</span>
@@ -78,7 +58,7 @@ export default function ListView({ people }) {
                         )}
                       >
                         View profile
-                        <span className="sr-only">, {person.name}</span>
+                        <span className="sr-only">, {exam.patientId}</span>
                       </a>
                     )}
                   </Menu.Item>
@@ -91,7 +71,7 @@ export default function ListView({ people }) {
                           "block px-3 py-1 text-sm leading-6 text-gray-900"
                         )}
                       >
-                        Message<span className="sr-only">, {person.name}</span>
+                        Message<span className="sr-only">, {exam.patientId}</span>
                       </a>
                     )}
                   </Menu.Item>

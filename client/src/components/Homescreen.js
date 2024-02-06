@@ -55,24 +55,16 @@ function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
 }
 
-const Homescreen = ({ people }) => {
+const Homescreen = ({ exams }) => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [searchInput, setSearchInput] = useState("");
 
-  const filteredPeople = people.filter((person) =>
-    person.name.toLowerCase().includes(searchInput.toLowerCase())
+  const filteredExams = exams.filter((exam) =>
+    exam.patientId.toLowerCase().includes(searchInput.toLowerCase())
   );
 
   return (
     <>
-      {/*
-        This example requires updating your template:
-
-        ```
-        <html class="h-full bg-white">
-        <body class="h-full">
-        ```
-      */}
       <div>
         <Transition.Root show={sidebarOpen} as={Fragment}>
           <Dialog
@@ -368,7 +360,7 @@ const Homescreen = ({ people }) => {
           <main className="py-10">
             <div className="px-4 sm:px-6 lg:px-8">
               {/* Your content */}
-              <ListView people={filteredPeople} />
+              <ListView exams={filteredExams} />
             </div>
           </main>
         </div>
