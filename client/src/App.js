@@ -1,6 +1,7 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Homescreen from "./components/Homescreen";
 import DetailView from "./components/DetailView";
+import AddView from "./components/AddView";
 
 const people = [
   {
@@ -65,15 +66,31 @@ const people = [
 
 function App() {
   return (
-    <BrowserRouter>
-      <Routes>
-        <Route path="/" element={<Homescreen people={people} />} />
-        <Route
-          path="/detail/:personId"
-          element={<DetailView people={people} />}
-        />
-      </Routes>
-    </BrowserRouter>
+    <div className="App">
+      <BrowserRouter>
+        <Routes>
+          <Route path="/" element={<Homescreen people={people} />} />
+          <Route
+            path="/detail/:personId"
+            element={
+              <div className="p-40">
+                {" "}
+                <DetailView people={people} />{" "}
+              </div>
+            }
+          />
+          <Route
+            path="/add"
+            element={
+              <div className="p-40">
+                {" "}
+                <AddView />{" "}
+              </div>
+            }
+          />
+        </Routes>
+      </BrowserRouter>
+    </div>
   );
 }
 

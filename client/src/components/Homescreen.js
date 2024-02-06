@@ -31,6 +31,7 @@ import {
   MagnifyingGlassIcon,
 } from "@heroicons/react/20/solid";
 import ListView from "./ListView";
+import { Link } from "react-router-dom";
 
 const navigation = [
   { name: "Dashboard", href: "#", icon: HomeIcon, current: true },
@@ -350,12 +351,14 @@ const Homescreen = ({ people }) => {
                 >
                   <span className="sr-only">View notifications</span>
                   <div className="mt-4 sm:ml-16 sm:mt-0 sm:flex-none">
-                    <button
-                      type="button"
-                      className="block rounded-md bg-indigo-600 px-3 py-2 text-center text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
-                    >
-                      Add record
-                    </button>
+                    <Link to="/add">
+                      <div
+                        type="button"
+                        className="block rounded-md bg-indigo-600 px-3 py-2 text-center text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+                      >
+                        Add record
+                      </div>
+                    </Link>
                   </div>
                 </button>
               </div>
