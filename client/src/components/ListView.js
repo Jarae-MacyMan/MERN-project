@@ -1,6 +1,7 @@
 import { Fragment } from "react";
 import { Menu, Transition } from "@headlessui/react";
 import { EllipsisVerticalIcon } from "@heroicons/react/20/solid";
+import { Link } from "react-router-dom";
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
@@ -9,7 +10,7 @@ function classNames(...classes) {
 export default function ListView({ people }) {
   return (
     <ul role="list" className="divide-y divide-gray-100">
-      {people.map((person) => (
+      {people.map((person, index) => (
         <li key={person.email} className="flex justify-between gap-x-6 py-5">
           <div className="flex min-w-0 gap-x-4">
             <img
@@ -19,9 +20,9 @@ export default function ListView({ people }) {
             />
             <div className="min-w-0 flex-auto">
               <p className="text-sm font-semibold leading-6 text-gray-900">
-                <a href={person.href} className="hover:underline">
+                <Link to={`/detail/${index}`} className="hover:underline">
                   {person.name}
-                </a>
+                </Link>
               </p>
               <p className="mt-1 flex text-xs leading-5 text-gray-500">
                 <a
