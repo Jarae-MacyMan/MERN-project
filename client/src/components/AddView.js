@@ -13,13 +13,17 @@
   ```
 */
 import { PhotoIcon, UserCircleIcon } from "@heroicons/react/24/solid";
+import { Link } from "react-router-dom";
 
 const AddView = () => {
   return (
     <>
-      <button className="mt-4 mb-4 rounded bg-blue-500 py-2 px-4 font-bold text-white hover:bg-blue-700">
-        Go back to homepage
-      </button>
+      <Link to="/">
+        <button className="mt-4 mb-4 rounded bg-blue-500 py-2 px-4 font-bold text-white hover:bg-blue-700">
+          Go back to homepage
+        </button>
+      </Link>
+
       <form>
         <div className="space-y-12">
           <div className="border-b border-gray-900/10 pb-12">
