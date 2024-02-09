@@ -12,7 +12,7 @@ router.get('/',getExams)
 router.get('/:id',getSingleExam)
 
 //post a new exam
-router.post('/',createExam)
+router.post('/',createExams)
 //delete
 router.delete('/:id',(req,res)=>{
     res.json({mssg:'delete a exam'})
