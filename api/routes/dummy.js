@@ -38,6 +38,7 @@ class Exam {
       icu_admit: Math.random() <= 0.5,
       number_icu_admits: Math.floor(Math.random() * 5),
       mortality: Math.random() <= 0.5,
+      _id: Math.floor(Math.random() * 16 ** 16).toString(16),
     });
   }
 }
@@ -59,11 +60,12 @@ fs.readFileSync(CSVFile).toString().split('\n').forEach((line) => {
     icu_admit: data[8] == 'Y',
     number_icu_admits: data[9] ? Number(data[9]) : undefined,
     mortality: data[10] == 'Y',
+    _id: Math.floor(Math.random() * 16 ** 16).toString(16),
   }));
 });
 
 router.get('/exams/', async (req, res) => {
-  const delay = parseInt(req.query.delay)
+  const delay = parseInt(req.query.delay);
   if (delay && (isNaN(delay) || delay < 0 || delay > 10000)) {
     return res.status(400).send("Invalid delay parameter");
   }
@@ -72,19 +74,22 @@ router.get('/exams/', async (req, res) => {
 });
 
 router.get('/exams/:exam_id/', async (req, res) => {
-  const exam_id = req.params.exam_id;
-  const delay = parseInt(req.query.delay)
+  const id = req.params.exam_id;
+  const delay = req.query.delay;
   if (delay && (isNaN(delay) || delay < 0 || delay > 10000)) {
     return res.status(400).send("Invalid delay parameter");
   }
-  if (!exam_id) return res.status(400).send("Missing exam_id parameter");
+  if (!id) return res.status(400).send("Missing exam_id parameter");
   await sleep(delay);
-  const exams = global_exam_data.filter(e => e.exam_id === exam_id);
+  const exams = global_exam_data.filter(e => e._id === id);
+  if (exams.length === 0) {
+    return res.status(404).send("Exam not found");
+  }
   res.send(exams);
 });
 
 router.get('/patients/', async (req, res) => {
-  const delay = parseInt(req.query.delay)
+  const delay = parseInt(req.query.delay);
   if (delay && (isNaN(delay) || delay < 0 || delay > 10000)) {
     return res.status(400).send("Invalid delay parameter");
   }
@@ -95,7 +100,7 @@ router.get('/patients/', async (req, res) => {
 
 router.get('/patients/:patient_id/', async (req, res) => {
   const patient_id = req.params.patient_id;
-  const delay = parseInt(req.query.delay)
+  const delay = parseInt(req.query.delay);
   if (delay && (isNaN(delay) || delay < 0 || delay > 10000)) {
     return res.status(400).send("Invalid delay parameter");
   }
@@ -106,6 +111,20 @@ router.get('/patients/:patient_id/', async (req, res) => {
     return res.status(404).send("Patient not found");
   }
   res.send(exams);
+});
+
+ router.post('/exams/', async (req, res) => { 
+  const delay = parseInt(req.query.delay);
+  if (delay && (isNaN(delay) || delay < 0 || delay > 10000)) {
+    return res.status(400).send("Invalid delay parameter");
+  }
+  await sleep(delay);
+  const exam = new Exam({
+    ...req.body,
+    _id: Math.floor(Math.random() * 16 ** 16).toString(16),
+  });
+  global_exam_data.push(exam);
+  res.send(exam);
 });
 
 module.exports = router;
