@@ -9,12 +9,17 @@ function classNames(...classes) {
 
 export default function ListView({ exams }) {
   return (
-    <ul role="list" className="divide-y divide-gray-100">
+    <ul className="divide-y divide-gray-100">
       {exams.map((exam, index) => (
         <li key={exam._id} className="flex justify-between gap-x-6 py-5">
-          <div className="flex min-w-0 gap-x-4">
+          <Link to={`/exam/${exam._id}`} className="flex min-w-0 gap-x-4">
             <img
-              className="h-12 w-12 flex-none rounded-full bg-gray-50"
+              //q: how do I define a tailwindcss class with a rounded edges, square image?
+              //a: use the flex-none class to prevent the image from stretching
+              //a: to make the image square with rounded edges, use the h-12 and w-12 classes
+
+
+              className="h-12 w-12 flex-none bg-gray-50 rounded-lg object-cover object-center"
               src={exam.imageURL}
               alt=""
             />
@@ -31,7 +36,7 @@ export default function ListView({ exams }) {
                 <span>Brixia Scores: {exam.brixiaScores}</span>
               </div>
             </div>
-          </div>
+          </Link>
           <div className="flex shrink-0 items-center gap-x-6">
             <Menu as="div" className="relative flex-none">
               <Menu.Button className="-m-2.5 block p-2.5 text-gray-500 hover:text-gray-900">
