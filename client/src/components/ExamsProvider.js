@@ -1,5 +1,5 @@
 // ExamsProvider.js
-import React, { createContext, useState, useEffect } from 'react';
+import React, { createContext, useState, useEffect, useCallback } from 'react';
 
 // Create context
 export const ExamsContext = createContext();
@@ -24,17 +24,14 @@ const fetchExams = async (examId) => {
 }
 
 export const ExamsProvider = ({ children }) => {
-    const [exams, setExams] = useState([]);
+    const [allExams, setAllExams] = useState([]);
+    const [currentExam, setCurrentExam] = useState(null);
 
     // Function to load a specific exam
-    const loadExam = async (examId) => {
+    const loadExam = useCallback(async (examId) => {
         const examData = await fetchExams(examId);
-        if (examData) {
-            setExams([examData]);
-        } else {
-            setExams([]); 
-        }
-    };
+        setCurrentExam(examData || null);
+    }, []); 
 
     useEffect(() => {
         fetchExams().then((data) => {
@@ -53,16 +50,16 @@ export const ExamsProvider = ({ children }) => {
                       brixiaScores: exam.brixiaScores,
                       imageURL: exam.imageURL
                   }));
-                setExams(formattedData);
+                setAllExams(formattedData);
             } else {
                 console.log("Invalid or empty data received:", data);
-                setExams([]);
+                setAllExams([]);
             }
         });
     }, []);
 
     return (
-        <ExamsContext.Provider value={{ exams, loadExam }}>
+        <ExamsContext.Provider value={{ allExams, currentExam, loadExam }}>
             {children}
         </ExamsContext.Provider>
     );

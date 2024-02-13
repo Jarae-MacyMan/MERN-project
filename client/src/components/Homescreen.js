@@ -35,6 +35,7 @@ import { Link } from "react-router-dom";
 import React, { useContext } from 'react';
 import { ExamsContext } from './ExamsProvider';
 
+
 const navigation = [
   { name: "Dashboard", href: "#", icon: HomeIcon, current: true },
   { name: "Team", href: "#", icon: UsersIcon, current: false },
@@ -61,8 +62,8 @@ const Homescreen = () => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [searchInput, setSearchInput] = useState("");
 
-  const { exams } = useContext(ExamsContext);
-  const array_of_exams = Object.values(exams);
+  const { allExams } = useContext(ExamsContext);
+  const array_of_exams = Object.values(allExams);
 
   const filteredExams = array_of_exams.filter((exam) =>
     exam.patientId.toLowerCase().includes(searchInput.toLowerCase())
@@ -222,8 +223,9 @@ const Homescreen = () => {
             <div className="flex h-16 shrink-0 items-center">
               <img
                 className="h-8 w-auto"
-                src="https://tailwindui.com/img/logos/mark.svg?color=indigo&shade=600"
-                alt="Your Company"
+                src="https://i.ibb.co/w72yF7Z/Green-Grapes-Logo.png" 
+                alt="Green-Grapes-Logo" 
+                style={{ width: '50px', height: '50px' }} 
               />
             </div>
             <nav className="flex flex-1 flex-col">
@@ -236,15 +238,15 @@ const Homescreen = () => {
                           href={item.href}
                           className={classNames(
                             item.current
-                              ? "bg-gray-50 text-indigo-600"
-                              : "text-gray-700 hover:text-indigo-600 hover:bg-gray-50",
+                              ? "bg-gray-50 text-green-600"
+                              : "text-gray-700 hover:text-green-600 hover:bg-gray-50",
                             "group flex gap-x-3 rounded-md p-2 text-sm leading-6 font-semibold"
                           )}
                         >
                           <item.icon
                             className={classNames(
                               item.current
-                                ? "text-indigo-600"
+                                ? "text-green-600"
                                 : "text-gray-400 group-hover:text-indigo-600",
                               "h-6 w-6 shrink-0"
                             )}
@@ -351,7 +353,7 @@ const Homescreen = () => {
                     <Link to="/add">
                       <div
                         type="button"
-                        className="block rounded-md bg-indigo-600 px-3 py-2 text-center text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+                        className="block rounded-md bg-green-600 px-3 py-2 text-center text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
                       >
                         Add record
                       </div>
