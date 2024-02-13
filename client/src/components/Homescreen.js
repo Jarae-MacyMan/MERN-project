@@ -32,6 +32,8 @@ import {
 } from "@heroicons/react/20/solid";
 import ListView from "./ListView";
 import { Link } from "react-router-dom";
+import React, { useContext } from 'react';
+import { ExamsContext } from './ExamsProvider';
 
 const navigation = [
   { name: "Dashboard", href: "#", icon: HomeIcon, current: true },
@@ -55,11 +57,14 @@ function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
 }
 
-const Homescreen = ({ exams }) => {
+const Homescreen = () => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [searchInput, setSearchInput] = useState("");
 
-  const filteredExams = exams.filter((exam) =>
+  const { exams } = useContext(ExamsContext);
+  const array_of_exams = Object.values(exams);
+
+  const filteredExams = array_of_exams.filter((exam) =>
     exam.patientId.toLowerCase().includes(searchInput.toLowerCase())
   );
 
