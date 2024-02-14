@@ -1,6 +1,6 @@
 const express= require('express')
-const Exam= require('../models/ExamModel');
-const {createExams,getExams,getSingleExam}= require('../controllers/exam-controllers')
+
+const {createExam,getExams,getSingleExam,deleteExam,updateExam}= require('../controllers/exam-controller')
 const router=express.Router()
 
 
@@ -12,14 +12,10 @@ router.get('/',getExams)
 router.get('/:id',getSingleExam)
 
 //post a new exam
-router.post('/',createExams)
+router.post('/',createExam)
 //delete
-router.delete('/:id',(req,res)=>{
-    res.json({mssg:'delete a exam'})
-})
+router.delete('/:id',deleteExam)
 //update
-router.patch('/:id',(req,res)=>{
-    res.json({mssg: 'update a exam'})
-})
+router.patch('/:id',updateExam)
 
 module.exports=router
