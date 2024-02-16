@@ -6,7 +6,7 @@ const exam = require('../models/exam-model');
     try{
         const exams= await exam.find()
         res.json(exams)
-         res.status(200).status(exams)
+         res.status(200).json(exams)
     }catch(error){
         res.status(400).json({error:error.message})
     }
