@@ -1,8 +1,6 @@
 //const Exam = require('../schema.js');
 const express = require('express');
 const router = express.Router();
-const mongoose = require('mongoose');
-const process = require('process');
 
 const getPatients = async function (req, res) {
 
@@ -11,7 +9,6 @@ const getPatients = async function (req, res) {
 
   const patients = await Exam.find({}).distinct('patient_id');
 
-  db.close();
 
   res.send(patients);
 
@@ -19,8 +16,6 @@ const getPatients = async function (req, res) {
 
 const getPatient = async function (req, res) {
 
-  await mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost:27017/test');
-  const db = mongoose.connection;
   const patient_id = req.params.patient_id;
 
   const patient = await Exam.find({patient_id: req.params.patient_id});
@@ -37,8 +32,6 @@ const getPatient = async function (req, res) {
 
 const removePatient = async function (req, res) {
   
-  await mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost:27017/test');
-  const db = mongoose.connection;
   const patient_id = req.params.patient_id;
 
   const patient = await Exam.findOne({patient_id: req.params.patient_id});
