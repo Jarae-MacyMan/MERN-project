@@ -30,9 +30,8 @@ const ExamDetail = () => {
       setComment(''); // Clear the comment input after submission
     }
   };
-
   // END OF COMMENT FEATURE
-
+  
   useEffect(() => {
     const fetchExam = async () => {
       await loadExam(examId);
@@ -68,7 +67,14 @@ const ExamDetail = () => {
           <p className="text-lg mb-2"><strong>Sex:</strong> {exam.sex}</p>
           <p className="text-lg mb-2"><strong>Zip Code:</strong> {exam.zipCode}</p>
           <p className="text-lg mb-2"><strong>BMI:</strong> {exam.bmi}</p>
-          <Link to="/" className="text-blue-600 hover:text-blue-800 mt-4 inline-block">Return to Home</Link>
+          <div className="mt-4">
+                    <Link 
+                        to="/" 
+                        className="text-md bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+                    >
+                        Return to Home
+                    </Link>
+          </div>
         </div>
   
         {/* Medical Analysis Card */}
