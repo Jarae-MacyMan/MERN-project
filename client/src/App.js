@@ -4,6 +4,7 @@ import { ExamsProvider } from './components/ExamsProvider'; // Import the provid
 import Homescreen from "./components/Homescreen";
 import ExamDetail from "./components/ExamDetail";
 import AddView from "./components/AddView";
+import PatientDetail from "./components/PatientDetail";
 
 function App() {
   return (
@@ -14,6 +15,7 @@ function App() {
             <Route path="/" element={<Homescreen />} /> 
             <Route path="/exam/:examId" element={<ExamDetail />} />
             <Route path="/add" element={<div className="p-40"><AddView /></div>} />
+            <Route path="/patient/:patientId" element={<PatientDetail />} />
           </Routes>
         </ExamsProvider>
       </BrowserRouter>
