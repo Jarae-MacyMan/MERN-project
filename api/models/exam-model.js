@@ -48,4 +48,4 @@ const examSchema = new Schema({
 })
 
 
-module.exports = mongoose.model('exam', examSchema)
+module.exports = mongoose.model('exam-model', examSchema)
