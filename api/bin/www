@@ -1,7 +1,4 @@
 #!/usr/bin/env node
-
-const mongoose = require('mongoose');
-
 /**
  * Module dependencies.
  */

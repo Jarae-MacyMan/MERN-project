@@ -30,7 +30,7 @@ app.use('/patients', patientsRouter);
 app.use('/dummy', dummyRouter);
 
 //connecting to MONGODBB
-app.use('/Exam', ExamRoutes)
+app.use('/exams', ExamRoutes)
 
 //connect to db
 //its aync so returns a promise
@@ -72,8 +72,6 @@ app.use('/Exam', ExamRoutes)
     }
     run().catch(console.dir); */
     
->>>>>>> 240597be673a1d59bc5948a37bfed0b8c9117fda
-
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
   next(createError(404));

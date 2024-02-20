@@ -5,10 +5,9 @@ const exam = require('../models/exam-model');
  const getExams=async(req,res)=>{
     try{
         const exams= await exam.find()
-        res.json(exams)
-         res.status(200).json(exams)
+        return res.status(200).json(exams)
     }catch(error){
-        res.status(400).json({error:error.message})
+        return res.status(400).json({error:error.message})
     }
     
  }
@@ -16,20 +15,23 @@ const exam = require('../models/exam-model');
 //get a single exam - based _id
  const getSingleExam=async(req,res)=>{
     const{ id}= req.params
-    const exams= await exam.findById(id)
+    let exams;
+    try {
+        exams= await exam.findById(id)
+    } catch (error) {
+        return res.status(400).send('Exam not found')
+    }
     if(!exam){
         //404 cant be found
-        return res.status(404).json({error:"No exam"})
+        return res.status(404).send('Exam not found')
     }
     // found exam
     res.status(200).json(exams)
  }
 //create a new exam
 const createExam= async(req,res) =>{
-    const{patient_id,age,sex,zip,latest_BMI,latest_weight,png_filename,exam_id,icu_admit,num_icu_admits,mortality}=req.body
-    //add doc to db
     try{
-        const exams= await exam.create({patient_id,age,sex,zip,latest_BMI,latest_weight,png_filename,exam_id,icu_admit,num_icu_admits,mortality})
+        const exams= await exam.create(req.body)
         res.status(200).json(exams)
     }catch(error){
         res.status(400).json({error:error.message})
@@ -57,7 +59,7 @@ const updateExam= async (req, res) => {
       
       // Find the exam by ID and update it
       //return the updated document
-      const updatedExam = await Exam.findByIdAndUpdate(id, updates, { new: true });
+      const updatedExam = await exam.findByIdAndUpdate(id, updates, { new: true });
       
       if (!updatedExam) {
         return res.status(404).json({ message: 'Exam not found' });

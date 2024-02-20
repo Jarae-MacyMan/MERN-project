@@ -3,13 +3,8 @@ const mongoose = require('mongoose')
 const Schema = mongoose.Schema
 
 const examSchema = new Schema({
-
-    exam_id:{
-        type: Number,
-        required: true
-    },
     patient_id: {
-        type: Number,
+        type: String,
         required: true
     },
     sex: {
@@ -36,7 +31,7 @@ const examSchema = new Schema({
         type: Number,
         required: true
     },
-    num_icu_admits:{
+    number_icu_admits:{
         type: Number,
         required: true
     },
@@ -48,4 +43,4 @@ const examSchema = new Schema({
 })
 
 
-module.exports = mongoose.model('exam-model', examSchema)
+module.exports = mongoose.model('exams', examSchema)
