@@ -1,6 +1,7 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { ExamsContext } from './ExamsProvider';
+import { useAdmin } from './AdminContext';
 import ListView from './ListView';
 
 
@@ -8,6 +9,7 @@ const PatientDetail = () => {
     const { patientId } = useParams();
     const { currentExam, loadExamsByPatientId } = useContext(ExamsContext);
     const [loading, setLoading] = useState(true);
+    const { isAdmin } = useAdmin();
 
     useEffect(() => {
         const fetchExam = async () => {
@@ -15,7 +17,7 @@ const PatientDetail = () => {
             setLoading(false);
           };
           fetchExam();
-    }, [patientId]);
+    }, [loadExamsByPatientId, patientId]);
 
     // If exam is still loading, it will be null so we need to check for that
     var exams = null;
@@ -29,6 +31,10 @@ const PatientDetail = () => {
     if (!exams) {
         return <div className="flex justify-center items-center h-screen">Exams not found.</div>;
     }
+    var redirect = "/";
+    if (isAdmin) {
+        redirect = "/admin";
+    }
 
     return (
         <div className="flex justify-center">
@@ -39,7 +45,7 @@ const PatientDetail = () => {
                 <ListView exams={exams.filter(exam => exam.patientId === patientId)} />
                 <div className="text-center mt-4">
                     <Link 
-                        to="/" 
+                        to={redirect}
                         className="text-md bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
                     >
                         Return to Home
