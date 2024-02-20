@@ -31,19 +31,16 @@ import {
   MagnifyingGlassIcon,
 } from "@heroicons/react/20/solid";
 import ListView from "./ListView";
-import { Link } from "react-router-dom";
-import React, { useContext } from 'react';
+import { Link, useLocation } from "react-router-dom";
+import React, { useContext, useEffect } from 'react';
 import { ExamsContext } from './ExamsProvider';
-
+import { useAdmin } from './AdminContext';
 
 const navigation = [
-  { name: "Dashboard", href: "#", icon: HomeIcon, current: true },
-  { name: "Team", href: "#", icon: UsersIcon, current: false },
-  { name: "Projects", href: "#", icon: FolderIcon, current: false },
-  { name: "Calendar", href: "#", icon: CalendarIcon, current: false },
-  { name: "Documents", href: "#", icon: DocumentDuplicateIcon, current: false },
-  { name: "Reports", href: "#", icon: ChartPieIcon, current: false },
+  { name: "Exams", href: "/", icon: FolderIcon, current: false },
+  { name: "Admin", href: "/admin", icon: UsersIcon, current: false },
 ];
+
 const teams = [
   { id: 1, name: "Heroicons", href: "#", initial: "H", current: false },
   { id: 2, name: "Tailwind Labs", href: "#", initial: "T", current: false },
@@ -61,9 +58,21 @@ function classNames(...classes) {
 const Homescreen = () => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [searchInput, setSearchInput] = useState("");
-
   const { allExams } = useContext(ExamsContext);
   const array_of_exams = Object.values(allExams);
+  const { isAdmin, toggleAdmin } = useAdmin(); // Use the admin context
+  const location = useLocation();
+
+  useEffect(() => {
+    // Check if the current path is '/admin' and isAdmin is false
+    if (location.pathname === '/admin' && !isAdmin) {
+      toggleAdmin(); // Set isAdmin to true
+    }
+    // Check if the current path is '/' (home) and isAdmin is true
+    else if (location.pathname === '/' && isAdmin) {
+      toggleAdmin(); // Set isAdmin to false
+    }
+  }, [location, isAdmin, toggleAdmin]);
 
   const filteredExams = array_of_exams.filter((exam) =>
     exam.patientId.toLowerCase().includes(searchInput.toLowerCase())
@@ -147,6 +156,7 @@ const Homescreen = () => {
                                       : "text-gray-700 hover:text-indigo-600 hover:bg-gray-50",
                                     "group flex gap-x-3 rounded-md p-2 text-sm leading-6 font-semibold"
                                   )}
+                                  
                                 >
                                   <item.icon
                                     className={classNames(
@@ -247,7 +257,7 @@ const Homescreen = () => {
                             className={classNames(
                               item.current
                                 ? "text-green-600"
-                                : "text-gray-400 group-hover:text-indigo-600",
+                                : "text-gray-400 group-hover:text-green-600",
                               "h-6 w-6 shrink-0"
                             )}
                             aria-hidden="true"
@@ -350,23 +360,24 @@ const Homescreen = () => {
                 >
                   <span className="sr-only">View notifications</span>
                   <div className="mt-4 sm:ml-16 sm:mt-0 sm:flex-none">
-                    <Link to="/add">
-                      <div
-                        type="button"
-                        className="block rounded-md bg-green-600 px-3 py-2 text-center text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
-                      >
-                        Add record
-                      </div>
-                    </Link>
+                    {isAdmin && (
+                      <Link to="/createExam">
+                        <div
+                          type="button"
+                          className="block rounded-md bg-green-600 px-3 py-2 text-center text-sm font-semibold text-white shadow-sm hover:bg-green-800 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-600"
+                        >
+                          Create Exam
+                        </div>
+                      </Link>
+                    )}
                   </div>
                 </button>
               </div>
             </div>
           </div>
-
           <main className="py-10">
             <div className="px-4 sm:px-6 lg:px-8">
-              <ListView exams={filteredExams} />
+              <ListView exams={filteredExams} isAdmin={isAdmin} />
             </div>
           </main>
         </div>
