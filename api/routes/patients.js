@@ -1,4 +1,4 @@
-const Exam = require('../schema.js');
+const Exam = require('../models/exam-model');
 const express = require('express');
 const router = express.Router();
 

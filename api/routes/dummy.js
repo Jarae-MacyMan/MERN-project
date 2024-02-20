@@ -65,7 +65,7 @@ fs.readFileSync(CSVFile).toString().split('\n').forEach((line) => {
 });
 
 router.get('/exams/', async (req, res) => {
-  const delay = parseInt(req.query.delay);
+  const delay = parseInt(req.query.delay)
   if (delay && (isNaN(delay) || delay < 0 || delay > 10000)) {
     return res.status(400).send("Invalid delay parameter");
   }
@@ -74,17 +74,14 @@ router.get('/exams/', async (req, res) => {
 });
 
 router.get('/exams/:exam_id/', async (req, res) => {
-  const id = req.params.exam_id;
-  const delay = req.query.delay;
+  const exam_id = req.params.exam_id;
+  const delay = parseInt(req.query.delay)
   if (delay && (isNaN(delay) || delay < 0 || delay > 10000)) {
     return res.status(400).send("Invalid delay parameter");
   }
-  if (!id) return res.status(400).send("Missing exam_id parameter");
+  if (!exam_id) return res.status(400).send("Missing exam_id parameter");
   await sleep(delay);
-  const exams = global_exam_data.filter(e => e._id === id);
-  if (exams.length === 0) {
-    return res.status(404).send("Exam not found");
-  }
+  const exams = global_exam_data.filter(e => e.exam_id === exam_id);
   res.send(exams);
 });
 
@@ -100,7 +97,7 @@ router.get('/patients/', async (req, res) => {
 
 router.get('/patients/:patient_id/', async (req, res) => {
   const patient_id = req.params.patient_id;
-  const delay = parseInt(req.query.delay);
+  const delay = parseInt(req.query.delay)
   if (delay && (isNaN(delay) || delay < 0 || delay > 10000)) {
     return res.status(400).send("Invalid delay parameter");
   }
