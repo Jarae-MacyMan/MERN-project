@@ -85,7 +85,7 @@ const CreateExam = () => {
 
             <div>
                 <label htmlFor="sex" class="block text-sm font-medium text-gray-700">Sex</label>
-                <input
+                <select
                 type="text"
                 name="sex"
                 id="sex"
@@ -93,7 +93,11 @@ const CreateExam = () => {
                 onChange={handleChange}
                 class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
                 required
-                />
+                >
+                  {formData.sex ? null : <option/>}
+                  <option>M</option>
+                  <option>F</option>
+                </select>
             </div>
 
             <div>
