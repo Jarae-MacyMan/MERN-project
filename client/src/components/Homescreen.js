@@ -75,7 +75,7 @@ const Homescreen = () => {
   }, [location, isAdmin, toggleAdmin]);
 
   const filteredExams = array_of_exams.filter((exam) =>
-    exam.patientId.toLowerCase().includes(searchInput.toLowerCase())
+    exam.patient_id.toLowerCase().includes(searchInput.toLowerCase())
   );
 
   return (

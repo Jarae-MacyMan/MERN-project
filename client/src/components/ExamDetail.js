@@ -57,7 +57,7 @@ const ExamDetail = (props) => {
     return <div className="flex justify-center items-center h-screen">Loading...</div>;
   }
   else {
-    exam = currentExam.exam;
+    exam = currentExam;
   }
   if (!exam) {
     return <div className="flex justify-center items-center h-screen">Exam not found.</div>;
@@ -119,14 +119,15 @@ const ExamDetail = (props) => {
             />
           ) : (
             <>
-              <img className="w-full h-48 object-contain rounded-md mb-4" src={exam.imageURL} alt="Exam" />
-              <p className="text-lg mb-2"><strong>ID:</strong> {exam._id}</p>
-              <p className="text-lg mb-2"><strong>Exam ID:</strong> {exam.examId}</p>
-              <p className="text-lg mb-2"><strong>Patient ID:</strong> {exam.patientId}</p>
+              <img className="w-full h-48 object-contain rounded-md mb-4" src={exam.png_filename} alt="Exam" />
+              <p className="text-lg mb-2"><strong>ID:</strong> {exam.exam_id}</p>
+              <p className="text-lg mb-2"><strong>Exam ID:</strong> {exam.exam_id}</p>
+              <p className="text-lg mb-2"><strong>Patient ID:</strong> {exam.patient_id}</p>
               <p className="text-lg mb-2"><strong>Age:</strong> {exam.age}</p>
               <p className="text-lg mb-2"><strong>Sex:</strong> {exam.sex}</p>
               <p className="text-lg mb-2"><strong>Zip Code:</strong> {exam.zipCode}</p>
               <p className="text-lg mb-2"><strong>BMI:</strong> {exam.bmi}</p>
+              <p className="text-lg mb-2"><strong>Weight:</strong> {exam.weight}</p>
             </>
           )}
 
@@ -172,8 +173,9 @@ const ExamDetail = (props) => {
           <h2 className="text-2xl font-semibold mb-4">Medical Analysis</h2>
           {editMode ? null : (
             <>
-              <p className="text-lg mb-2"><strong>Key Findings:</strong> {exam.keyFindings}</p>
-              <p className="text-lg"><strong>Brixia Scores:</strong> {exam.brixiaScores}</p>
+              <p className="text-lg mb-2"><strong>ICU Admit:</strong> {exam.icu_admit ? 'Yes' : 'No'}</p>
+              <p className="text-lg mb-2"><strong>Number of ICU Admits:</strong> {exam.number_icu_admits}</p>
+              <p className="text-lg mb-2"><strong>Mortality:</strong> {exam.mortality ? 'Yes' : 'No'}</p>
             </>
           )}
           {/* Additional analysis data can go here */}

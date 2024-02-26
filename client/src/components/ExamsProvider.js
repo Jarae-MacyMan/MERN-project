@@ -8,13 +8,12 @@ export const ExamsContext = createContext();
 const fetchExams = async (examId, patientId) => {
     try {
         // Construct the URL based on whether an examId/PatientID is provided
-        let url = "https://czi-covid-lypkrzry4q-uc.a.run.app/api/exams/";
+        let url = "http://localhost:9000/exams/";
         if (examId) {
-            url = `https://czi-covid-lypkrzry4q-uc.a.run.app/api/exam/${examId}/`;
+            url = `http://localhost:9000/exams/${examId}/`;
         } else if (patientId) {
-            url = `https://czi-covid-lypkrzry4q-uc.a.run.app/api/patient/${patientId}/`;
+            url = `http://localhost:9000/patients/${patientId}/`;
         }
-
         const response = await fetch(url);
         if (!response.ok) {
             throw new Error(`HTTP error! status: ${response.status}`);
@@ -34,31 +33,76 @@ export const ExamsProvider = ({ children }) => {
     // Function to load a specific exam
     const loadExam = useCallback(async (examId) => {
         const examData = await fetchExams(examId);
-        setCurrentExam(examData || null);
+        const exam = examData.exam;
+        if (examData && examData.success) {
+            const formattedData = {
+                _id: exam._id,
+                exam_id: exam.exam_id, 
+                patient_id: exam.patient_id, 
+                age: exam.age,
+                sex: exam.sex,
+                zipCode: exam.zip, 
+                bmi: exam.latest_bmi, 
+                weight: exam.latest_weight, 
+                png_filename: exam.png_filename, 
+                icu_admit: exam.icu_admit, 
+                number_icu_admits: exam.number_icu_admits, 
+                mortality: exam.mortality 
+            };
+            setCurrentExam(formattedData || null);
+            }
+        else {
+            console.log("Invalid or empty data received:", examData);
+            setCurrentExam(null);
+        }
     }, []); 
 
     // Function to load exams by patient ID
     const loadExamsByPatientId = useCallback(async (patientId) => {
-        const examData = await fetchExams(null, patientId);
-        setCurrentExam(examData || []);
+        const examData = await fetchExams(null, patientId)
+        if (examData && examData.success && Array.isArray(examData.exam)) {
+            const formattedData = examData.exam
+                .filter(exam => exam != null)
+                .map(exam => ({
+                    _id: exam._id,
+                    exam_id: exam.exam_id, 
+                    patient_id: exam.patient_id, 
+                    age: exam.age,
+                    sex: exam.sex,
+                    zipCode: exam.zip, 
+                    bmi: exam.latest_bmi, 
+                    weight: exam.latest_weight, 
+                    png_filename: exam.png_filename, 
+                    icu_admit: exam.icu_admit, 
+                    number_icu_admits: exam.number_icu_admits, 
+                    mortality: exam.mortality 
+                }));
+            setCurrentExam(formattedData || []);
+            }
+        else {
+            console.log("Invalid or empty data received:", examData);
+            setCurrentExam([]);
+        }
     }, []);
 
     useEffect(() => {
         fetchExams().then((data) => {
-            if (data && data.success && Array.isArray(data.exams)) {
-                const formattedData = data.exams
+            if (data && data.success && Array.isArray(data.exam)) {
+                const formattedData = data.exam
                   .filter(exam => exam != null)
                   .map(exam => ({
-                      _id: exam._id,
-                      examId: exam.examId,
-                      patientId: exam.patientId,
-                      age: exam.age,
-                      sex: exam.sex,
-                      zipCode: exam.zipCode,
-                      bmi: exam.bmi,
-                      keyFindings: exam.keyFindings,
-                      brixiaScores: exam.brixiaScores,
-                      imageURL: exam.imageURL
+                        _id: exam._id,
+                        exam_id: exam.exam_id, 
+                        patient_id: exam.patient_id, 
+                        age: exam.age,
+                        sex: exam.sex,
+                        zipCode: exam.zip, 
+                        bmi: exam.latest_bmi, 
+                        weight: exam.latest_weight, 
+                        png_filename: exam.png_filename, 
+                        icu_admit: exam.icu_admit, 
+                        number_icu_admits: exam.number_icu_admits, 
+                        mortality: exam.mortality 
                   }));
                 setAllExams(formattedData);
             } else {

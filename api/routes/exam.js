@@ -8,7 +8,6 @@ const router=express.Router()
 router.get('/',getExams)
 
 //get a single exam
-
 router.get('/:id',getSingleExam)
 
 //post a new exam

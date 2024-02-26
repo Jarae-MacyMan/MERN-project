@@ -42,5 +42,4 @@ const examSchema = new Schema({
     
 })
 
-
 module.exports = mongoose.model('exams', examSchema)
