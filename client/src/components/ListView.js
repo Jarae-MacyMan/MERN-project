@@ -30,18 +30,19 @@ export default function ListView({ exams, isAdmin }) {
             <div className="min-w-0 flex-auto">
               <span className="text-sm font-semibold leading-6 text-gray-900">Patient ID: </span>
                 <Link 
-                    to={`/patient/${exam.patientId}`} 
+                    to={`/patient/${exam.patient_id}`} 
                     className="text-blue-600 hover:text-blue-800"
                 >
-                    {exam.patientId}
+                    {exam.patient_id}
                 </Link>
               <div className="mt-1 flex flex-col text-xs leading-5 text-gray-500">
-                <span>Exam ID: {exam.examId}</span>
+                <span>Exam ID: {exam.exam_id}</span>
                 <span>Age: {exam.age} - Sex: {exam.sex}</span>
                 <span>Zip Code: {exam.zipCode}</span>
                 <span>BMI: {exam.bmi}</span>
-                <span>Key Findings: {exam.keyFindings}</span>
-                <span>Brixia Scores: {exam.brixiaScores}</span>
+                <span>ICU Admit: {exam.icu_admit === 1 ? 'True' : 'False'}</span>
+                <span>Number ICU Admits: {exam.number_icu_admits}</span>
+                <span>Mortality: {exam.mortality ? 'True' : 'False'}</span>
               </div>
             </div>
           </Link>
