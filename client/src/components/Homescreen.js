@@ -269,9 +269,10 @@ const Homescreen = (props) => {
                   </div>
                   <ul role="list" className="-mx-2 mt-2 space-y-1">
                     {props.history.map((exam) => (
-                      <li key={exam.name}>
+                      <li key={exam._id}>
                         <a
-                          href={exam.href}
+                        // needs to be changed for deployment
+                          href={`http://localhost:3000/exam/${exam._id}`}
                           className={classNames(
                             exam.current
                               ? "bg-gray-50 text-indigo-600"
@@ -279,17 +280,17 @@ const Homescreen = (props) => {
                             "group flex gap-x-3 rounded-md p-2 text-sm leading-6 font-semibold"
                           )}
                         >
-                          <span
+                          <img
+                            alt={`Patient ${exam.patientId}`}
+                            src={exam.imageURL}
                             className={classNames(
                               exam.current
                                 ? "text-indigo-600 border-indigo-600"
                                 : "text-gray-400 border-gray-200 group-hover:border-indigo-600 group-hover:text-indigo-600",
                               "flex h-6 w-6 shrink-0 items-center justify-center rounded-lg border text-[0.625rem] font-medium bg-white"
                             )}
-                          >
-                            {exam.initial}
-                          </span>
-                          <span className="truncate">{exam.name}</span>
+                          />
+                          <span className="truncate">{exam.patientId}</span>
                         </a>
                       </li>
                     ))}
