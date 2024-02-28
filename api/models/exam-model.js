@@ -7,6 +7,10 @@ const examSchema = new Schema({
         type: String,
         required: true
     },
+    exam_id: {
+        type: String,
+        required: true
+    },
     sex: {
         type: String,
         required: true
@@ -20,6 +24,10 @@ const examSchema = new Schema({
         required: true
     },
     latest_weight: {
+        type: Number,
+        required: true
+    },
+    latest_bmi: {
         type: Number,
         required: true
     },

@@ -1,29 +1,51 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { ExamsContext } from './ExamsProvider';
 
 const CreateExam = () => {
   const [formData, setFormData] = useState({
-    patientId: '',
+    patient_id: '',
+    exam_id: '',
+    png_filename: '',
     age: '',
     sex: '',
-    bmi: '',
-    zipCode: '',
-    examId: '',
-    imageURL: '',
-    keyFindings: '',
-    brixiaScores: ''
+    zip: '',
+    latest_bmi: '',
+    latest_weight: '',
+    icu_admit: 0,
+    number_icu_admits: '',
+    mortality: false
   });
   const navigate = useNavigate();
 
   const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+    const { name, value } = e.target;
+    setFormData(prevFormData => ({
+      ...prevFormData,
+      [name]: value
+    }));
   };
+  
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // API call to create exam goes here
-    console.log(formData); // Replace with actual API call
-    navigate('/'); // Redirect after creation
+    try {
+      const response = await fetch('http://localhost:9000/exams/', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(formData)
+      });
+      if (response.ok) {
+        navigate('/');
+      } else {
+        // Handle errors
+        console.error('Failed to create exam:', response.status);
+      }
+    } catch (error) {
+      console.error('Error during fetch:', error);
+    }
   };
 
   return (
@@ -32,67 +54,66 @@ const CreateExam = () => {
         <h2 className="text-xl font-semibold mb-4">Create New Exam</h2>
         <div>
             <div>
-                <label htmlFor="patientId" class="block text-sm font-medium text-gray-700">Patient ID</label>
+                <label htmlFor="patient_id" className="block text-sm font-medium text-gray-700">Patient ID</label>
                 <input
                 type="text"
-                name="patientId"
-                id="patientId"
-                value={formData.patientId}
+                name="patient_id"
+                id="patient_id"
+                defaultValue={formData.patient_id}
                 onChange={handleChange}
-                class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-green-600 focus:ring focus:ring-green-600 focus:ring-opacity-50"
                 required
                 />
             </div>
 
             <div>
-                <label htmlFor="examId" class="block text-sm font-medium text-gray-700">Exam ID</label>
+                <label htmlFor="exam_id" className="block text-sm font-medium text-gray-700">Exam ID</label>
                 <input
                 type="text"
-                name="examId"
-                id="examId"
-                value={formData.examId}
+                name="exam_id"
+                id="exam_id"
+                defaultValue={formData.exam_id}
                 onChange={handleChange}
-                class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-green-600 focus:ring focus:ring-green-600 focus:ring-opacity-50"
                 required
                 />
             </div>
 
             <div>
-                <label htmlFor="imageURL" class="block text-sm font-medium text-gray-700">Image URL</label>
+                <label htmlFor="png_filename" className="block text-sm font-medium text-gray-700">Image File Name</label>
                 <input
                 type="text"
-                name="imageURL"
-                id="imageURL"
-                value={formData.imageURL}
+                name="png_filename"
+                id="png_filename"
+                defaultValue={formData.png_filename}
                 onChange={handleChange}
-                class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-green-600 focus:ring focus:ring-green-600 focus:ring-opacity-50"
                 required
                 />
             </div>
 
             <div>
-                <label htmlFor="age" class="block text-sm font-medium text-gray-700">Age</label>
+                <label htmlFor="age" className="block text-sm font-medium text-gray-700">Age</label>
                 <input
                 type="number"
                 name="age"
                 id="age"
-                value={formData.age}
+                defaultValue={formData.age}
                 onChange={handleChange}
-                class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-green-600 focus:ring focus:ring-green-600 focus:ring-opacity-50"
                 required
                 />
             </div>
 
             <div>
-                <label htmlFor="sex" class="block text-sm font-medium text-gray-700">Sex</label>
+                <label htmlFor="sex" className="block text-sm font-medium text-gray-700">Sex</label>
                 <select
                 type="text"
                 name="sex"
                 id="sex"
-                value={formData.sex}
+                defaultValue={formData.sex}
                 onChange={handleChange}
-                class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
-                required
+                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-green-600 focus:ring focus:ring-green-600 focus:ring-opacity-50"
                 >
                   {formData.sex ? null : <option/>}
                   <option>M</option>
@@ -101,65 +122,95 @@ const CreateExam = () => {
             </div>
 
             <div>
-                <label htmlFor="zipCode" class="block text-sm font-medium text-gray-700">Zip Code</label>
+                <label htmlFor="zip" className="block text-sm font-medium text-gray-700">Zip Code</label>
                 <input
                 type="text"
-                name="zipCode"
-                id="zipCode"
-                value={formData.zipCode}
+                name="zip"
+                id="zip"
+                defaultValue={formData.zip}
                 onChange={handleChange}
-                class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-green-600 focus:ring focus:ring-green-600 focus:ring-opacity-50"
                 required
                 />
             </div>
 
             <div>
-                <label htmlFor="bmi" class="block text-sm font-medium text-gray-700">BMI</label>
+                <label htmlFor="latest_bmi" className="block text-sm font-medium text-gray-700">BMI</label>
                 <input
                 type="number"
-                step="any"
-                name="bmi"
-                id="bmi"
-                value={formData.bmi}
+                name="latest_bmi"
+                id="latest_bmi"
+                defaultValue={formData.latest_bmi}
                 onChange={handleChange}
-                class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-green-600 focus:ring focus:ring-green-600 focus:ring-opacity-50"
                 required
                 />
             </div>
 
             <div>
-                <label htmlFor="keyFindings" class="block text-sm font-medium text-gray-700">Key Findings</label>
-                <textarea
-                name="keyFindings"
-                id="keyFindings"
-                rows="3"
-                value={formData.keyFindings}
-                onChange={handleChange}
-                class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
-                required
-                ></textarea>
-            </div>
-
-            <div>
-                <label htmlFor="brixiaScores" class="block text-sm font-medium text-gray-700">Brixia Scores</label>
+                <label htmlFor="latest_weight" className="block text-sm font-medium text-gray-700">Weight</label>
                 <input
-                type="text"
-                name="brixiaScores"
-                id="brixiaScores"
-                value={formData.brixiaScores}
+                type="number"
+                name="latest_weight"
+                id="latest_weight"
+                defaultValue={formData.latest_weight}
                 onChange={handleChange}
-                class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-green-600 focus:ring focus:ring-green-600 focus:ring-opacity-50"
                 required
                 />
             </div>
+
+            <div>
+                <label htmlFor="icu_admit" className="block text-sm font-medium text-gray-700">ICU Admit</label>
+                <select
+                    name="icu_admit"
+                    id="icu_admit"
+                    defaultValue={formData.icu_admit}
+                    onChange={handleChange}
+                    className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-green-600 focus:ring focus:ring-green-600 focus:ring-opacity-50"
+                    required
+                >
+                    <option value="0">False</option>
+                    <option value="1">True</option>
+                </select>
             </div>
 
-            <div class="col-span-2">
-            <button type="submit" class="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+            <div>
+                <label htmlFor="number_icu_admits" className="block text-sm font-medium text-gray-700">Number of ICU Admits</label>
+                <input
+                type="number"
+                name="number_icu_admits"
+                id="number_icu_admits"
+                defaultValue={formData.number_icu_admits}
+                onChange={handleChange}
+                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-green-600 focus:ring focus:ring-green-600 focus:ring-opacity-50"
+                required
+                />
+            </div>
+
+            <div>
+                <label htmlFor="mortality" className="block text-sm font-medium text-gray-700">Mortality</label>
+                <select
+                    name="mortality"
+                    id="mortality"
+                    defaultValue={formData.mortality}
+                    onChange={handleChange}
+                    className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-green-600 focus:ring focus:ring-green-600 focus:ring-opacity-50"
+                    required
+                >
+                    <option value="false">False</option>
+                    <option value="true">True</option>
+                </select>
+            </div>
+
+            </div>
+
+            <div className="col-span-2">
+            <button type="submit" className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
                 Create Exam
             </button>
-            <div class="h-4"></div>
-            <button type="button" onClick={() => navigate('/admin')} class="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-red-500 hover:bg-red-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+            <div className="h-4"></div>
+            <button type="button" onClick={() => navigate('/admin')} className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-red-500 hover:bg-red-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
                 Cancel
             </button>
             </div>
