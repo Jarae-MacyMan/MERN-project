@@ -1,5 +1,6 @@
 // ExamsProvider.js
 import React, { createContext, useState, useEffect, useCallback } from 'react';
+import Homescreen from './Homescreen';
 
 // Create context
 export const ExamsContext = createContext();
@@ -41,9 +42,9 @@ export const ExamsProvider = ({ children }) => {
                 patient_id: exam.patient_id, 
                 age: exam.age,
                 sex: exam.sex,
-                zipCode: exam.zip, 
-                bmi: exam.latest_bmi, 
-                weight: exam.latest_weight, 
+                zip: exam.zip, 
+                latest_bmi: exam.latest_bmi, 
+                latest_weight: exam.latest_weight, 
                 png_filename: exam.png_filename, 
                 icu_admit: exam.icu_admit, 
                 number_icu_admits: exam.number_icu_admits, 
@@ -55,7 +56,7 @@ export const ExamsProvider = ({ children }) => {
             console.log("Invalid or empty data received:", examData);
             setCurrentExam(null);
         }
-    }, []); 
+    }, [fetchExams, setCurrentExam]); 
 
     // Function to load exams by patient ID
     const loadExamsByPatientId = useCallback(async (patientId) => {
@@ -69,9 +70,9 @@ export const ExamsProvider = ({ children }) => {
                     patient_id: exam.patient_id, 
                     age: exam.age,
                     sex: exam.sex,
-                    zipCode: exam.zip, 
-                    bmi: exam.latest_bmi, 
-                    weight: exam.latest_weight, 
+                    zip: exam.zip, 
+                    latest_bmi: exam.latest_bmi, 
+                    latest_weight: exam.latest_weight, 
                     png_filename: exam.png_filename, 
                     icu_admit: exam.icu_admit, 
                     number_icu_admits: exam.number_icu_admits, 
@@ -96,9 +97,9 @@ export const ExamsProvider = ({ children }) => {
                         patient_id: exam.patient_id, 
                         age: exam.age,
                         sex: exam.sex,
-                        zipCode: exam.zip, 
-                        bmi: exam.latest_bmi, 
-                        weight: exam.latest_weight, 
+                        zip: exam.zip, 
+                        latest_bmi: exam.latest_bmi, 
+                        latest_weight: exam.latest_weight, 
                         png_filename: exam.png_filename, 
                         icu_admit: exam.icu_admit, 
                         number_icu_admits: exam.number_icu_admits, 
@@ -113,7 +114,7 @@ export const ExamsProvider = ({ children }) => {
     }, []);
 
     return (
-        <ExamsContext.Provider value={{ allExams, currentExam, loadExam, loadExamsByPatientId }}>
+        <ExamsContext.Provider value={{ allExams, currentExam, loadExam, loadExamsByPatientId, fetchExams }}>
             {children}
         </ExamsContext.Provider>
     );
