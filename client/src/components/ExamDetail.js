@@ -14,29 +14,29 @@ const ExamDetail = (props) => {
   const [editMode, setEditMode] = useState(props.editMode || false);
   const [formData, setFormData] = useState({});
 
-    //COMMENT FEATURE
-    const [comment, setComment] = useState(''); // State to hold the current comment
-    const [comments, setComments] = useState([]); // State to hold all comments
-  
-    const handleCommentSubmit = (e) => {
-      e.preventDefault();
-      if (comment.trim()) {
-        const currentDate = new Date();
-        const formattedDate = currentDate.toLocaleDateString('en-US', {
-          year: 'numeric',
-          month: 'long',
-          day: 'numeric',
-          hour: '2-digit',
-          minute: '2-digit',
-          second: '2-digit'
-        });
-        const newComment = `${formattedDate}: ${comment}`;
-        setComments([...comments, newComment]);
-        setComment(''); // Clear the comment input after submission
-      }
-    };
-    // END OF COMMENT FEATURE
-  
+  //COMMENT FEATURE
+  const [comment, setComment] = useState(''); // State to hold the current comment
+  const [comments, setComments] = useState([]); // State to hold all comments
+
+  const handleCommentSubmit = (e) => {
+    e.preventDefault();
+    if (comment.trim()) {
+      const currentDate = new Date();
+      const formattedDate = currentDate.toLocaleDateString('en-US', {
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit',
+        second: '2-digit'
+      });
+      const newComment = `${formattedDate}: ${comment}`;
+      setComments([...comments, newComment]);
+      setComment(''); // Clear the comment input after submission
+    }
+  };
+  // END OF COMMENT FEATURE
+
   useEffect(() => {
     const fetchExam = async () => {
       await loadExam(examId);
@@ -44,13 +44,23 @@ const ExamDetail = (props) => {
     };
     fetchExam();
   }, [loadExam, examId]);
-
+  
   useEffect(() => {
     if (editMode && !loading) {
       setFormData(currentExam.exam);
     }
   }, [editMode, currentExam]);
 
+  useEffect(() => {
+    if (!loading && exam) {
+      const history = props.history
+      const setHistory = props.setHistory
+      const filtered = history.filter((current) => current._id !== exam._id)
+      setHistory([exam, ...filtered]);
+      // history.length > 5 ? setHistory(history.filter((current) => current._id !== history[history.length - 1]._id)) : console.log(history.length)
+    }
+  }, [loading, exam])
+  
   // If exam is still loading, it will be null so we need to check for that
   var exam = null;
   if (loading) {
