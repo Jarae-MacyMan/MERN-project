@@ -2,32 +2,43 @@ const { default: mongoose } = require('mongoose');
 const exam = require('../models/exam-model');
 
 //all Exams
- const getExams=async(req,res)=>{
-    try{
-        const exams= await exam.find()
-        return res.status(200).json(exams)
-    }catch(error){
-        return res.status(400).json({error:error.message})
+const getExams = async (req, res) => {
+    try {
+        const examData = await exam.find();
+        if (!examData) {
+            return res.status(404).json({ success: false, error: 'Exam not found' });
+        }
+        return res.status(200).json({
+            success: true,
+            exam: examData
+        });
+    } catch (error) {
+        return res.status(500).json({
+            success: false,
+            error: error.message
+        });
     }
-    
- }
+};
 
 //get a single exam - based _id
  const getSingleExam=async(req,res)=>{
-    const{ id}= req.params
-    let exams;
     try {
-        exams= await exam.findById(id)
-    } catch (error) {
-        return res.status(400).send('Exam not found')
-    }
-    if(!exam){
-        //404 cant be found
-        return res.status(404).send('Exam not found')
-    }
-    // found exam
-    res.status(200).json(exams)
- }
+      const examData = await exam.findById(req.params.id);
+      if (!examData) {
+          return res.status(404).json({ success: false, error: 'Exam not found' });
+      }
+      return res.status(200).json({
+          success: true,
+          exam: examData
+      });
+  } catch (error) {
+      return res.status(500).json({
+          success: false,
+          error: error.message
+      });
+  }
+}
+
 //create a new exam
 const createExam= async(req,res) =>{
     try{
@@ -56,9 +67,9 @@ const updateExam= async (req, res) => {
     try {
       const { id } = req.params;
       const updates = req.body;
-      
       // Find the exam by ID and update it
       //return the updated document
+      console.log('updates',updates)
       const updatedExam = await exam.findByIdAndUpdate(id, updates, { new: true });
       
       if (!updatedExam) {

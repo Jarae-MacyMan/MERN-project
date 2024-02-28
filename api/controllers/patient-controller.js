@@ -12,16 +12,22 @@ const getPatient = async function (req, res) {
 
   const patient_id = req.params.patient_id;
 
-  const patient = await Exam.find({patient_id});
-
-  if (patient.length === 0) {
-    res.status(404).send('Patient not found');
-    return;
+  try {
+      const examData = await Exam.find({patient_id});
+      if (!examData) {
+          return res.status(404).json({ success: false, error: 'Exam not found' });
+      }
+      return res.status(200).json({
+          success: true,
+          exam: examData
+      });
+  } catch (error) {
+      return res.status(500).json({
+          success: false,
+          error: error.message
+      });
   }
-
-  res.send(patient.map(exam => { return { ...exam._doc }}));
-
-}
+};
 
 const removePatient = async function (req, res) {
   

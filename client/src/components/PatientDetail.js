@@ -25,7 +25,7 @@ const PatientDetail = () => {
         return <div className="flex justify-center items-center h-screen">Loading...</div>;
     }
     else {
-        exams = currentExam.exams;
+        exams = currentExam;
     }
 
     if (!exams) {
@@ -42,7 +42,7 @@ const PatientDetail = () => {
                 <h1 className="text-2xl font-semibold mb-4">Patient Details</h1>
                 <p className="mb-2">Patient ID: {patientId}</p>
                 <p className="mb-4">Number of Exams: {exams.length}</p>
-                <ListView exams={exams.filter(exam => exam.patientId === patientId)} />
+                <ListView exams={exams.filter(exam => exam.patient_id === patientId)} />
                 <div className="text-center mt-4">
                     <Link 
                         to={redirect}
