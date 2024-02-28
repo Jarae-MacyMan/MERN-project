@@ -3,8 +3,9 @@ import React, { useContext, useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { ExamsContext } from './ExamsProvider';
 import { Link } from 'react-router-dom';
-import { useAdmin } from './AdminContext';
+import { AdminProvider, useAdmin } from './AdminContext';
 import EditableFieldsForm from './EditableFieldsForm';
+import ImageModal from './ImageModal';
 
 const ExamDetail = (props) => {
   const { examId } = useParams();
@@ -13,6 +14,7 @@ const ExamDetail = (props) => {
   const { isAdmin } = useAdmin();
   const [editMode, setEditMode] = useState(props.editMode || false);
   const [formData, setFormData] = useState({});
+  const [isImageModalOpen, setIsImageModalOpen] = useState(false);
 
   //COMMENT FEATURE
   const [comment, setComment] = useState(''); // State to hold the current comment
@@ -46,8 +48,9 @@ const ExamDetail = (props) => {
   }, [loadExam, examId]);
   
   useEffect(() => {
-    if (editMode && !loading) {
-      setFormData(currentExam.exam);
+    // Check if editMode is true and data is loaded, then set the formData
+    if (editMode && currentExam) {
+      setFormData(currentExam);
     }
   }, [editMode, currentExam]);
 
@@ -67,7 +70,7 @@ const ExamDetail = (props) => {
     return <div className="flex justify-center items-center h-screen">Loading...</div>;
   }
   else {
-    exam = currentExam.exam;
+    exam = currentExam;
   }
   if (!exam) {
     return <div className="flex justify-center items-center h-screen">Exam not found.</div>;
@@ -80,6 +83,10 @@ const ExamDetail = (props) => {
     // Set redirect to admin view
     redirect = "/admin";
   }
+
+  const handleImageClick = () => {
+    setIsImageModalOpen(!isImageModalOpen);
+  };
 
   const toggleEditMode = () => {
     if (editMode) {
@@ -98,18 +105,50 @@ const ExamDetail = (props) => {
       setFormData({ ...formData, [e.target.name]: parseInt(e.target.value) });
     }
   }
+  
+  const handleSubmit = async () => {
+    try {
+        const response = await fetch(`http://localhost:9000/exams/${examId}`, {
+            method: "PATCH",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify(formData),
+        });
 
-  const handleSubmit = () => {
-    // API call to update exam goes here
-    console.log(formData); // Replace with actual API call
-    setEditMode(false);
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        const updatedExam = await response.json();
+
+        // Call loadExam again to refresh the data
+        await loadExam(examId);
+        setEditMode(false);
+    }
+    catch (error) {
+        console.error("Error during fetch:", error);
+    }
   };
 
-  const handleDelete = (examId) => {
+  const handleDelete = async (examId) => {
     // Show confirmation dialog
     if (window.confirm("Are you sure you want to delete this exam?")) {
-      // Delete the exam
-      console.log(`Deleting exam with ID: ${examId}`);
+      try {
+        // Delete the exam asynchronously
+        const response = await fetch(`http://localhost:9000/exams/${examId}`, {
+          method: "DELETE",
+        });
+
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        // Navigate to the home page
+        window.location.href = "/";
+      }
+      catch (error) {
+        console.error("Error during fetch:", error);
+      }
     }
   };
 
@@ -121,7 +160,6 @@ const ExamDetail = (props) => {
           <h2 className="text-2xl font-semibold mb-4">Patient Information</h2>
 
           {editMode ? (
-            // Display the form in edit mode only the first few fields
             <EditableFieldsForm
               exam={formData}
               handleChange={handleChange}
@@ -129,14 +167,25 @@ const ExamDetail = (props) => {
             />
           ) : (
             <>
-              <img className="w-full h-48 object-contain rounded-md mb-4" src={exam.imageURL} alt="Exam" />
-              <p className="text-lg mb-2"><strong>ID:</strong> {exam._id}</p>
-              <p className="text-lg mb-2"><strong>Exam ID:</strong> {exam.examId}</p>
-              <p className="text-lg mb-2"><strong>Patient ID:</strong> {exam.patientId}</p>
+              <div onClick={handleImageClick} className="cursor-pointer">
+                <img className="w-full h-48 object-contain rounded-md mb-4 cursor-pointer" src={`/images/${exam.png_filename}`} alt="Exam" />
+              </div>
+                {/* Image Modal */}
+                {isImageModalOpen && (
+                  <ImageModal
+                    src={`/images/${exam.png_filename}`}
+                    alt="Exam"
+                    onClose={() => setIsImageModalOpen(false)}
+                  />
+                )}
+              <p className="text-lg mb-2"><strong>ID:</strong> {exam.exam_id}</p>
+              <p className="text-lg mb-2"><strong>Exam ID:</strong> {exam.exam_id}</p>
+              <p className="text-lg mb-2"><strong>Patient ID:</strong> {exam.patient_id}</p>
               <p className="text-lg mb-2"><strong>Age:</strong> {exam.age}</p>
               <p className="text-lg mb-2"><strong>Sex:</strong> {exam.sex}</p>
-              <p className="text-lg mb-2"><strong>Zip Code:</strong> {exam.zipCode}</p>
-              <p className="text-lg mb-2"><strong>BMI:</strong> {exam.bmi}</p>
+              <p className="text-lg mb-2"><strong>Zip Code:</strong> {exam.zip}</p>
+              <p className="text-lg mb-2"><strong>BMI:</strong> {exam.latest_bmi}</p>
+              <p className="text-lg mb-2"><strong>Weight:</strong> {exam.latest_weight}</p>
             </>
           )}
 
@@ -182,8 +231,9 @@ const ExamDetail = (props) => {
           <h2 className="text-2xl font-semibold mb-4">Medical Analysis</h2>
           {editMode ? null : (
             <>
-              <p className="text-lg mb-2"><strong>Key Findings:</strong> {exam.keyFindings}</p>
-              <p className="text-lg"><strong>Brixia Scores:</strong> {exam.brixiaScores}</p>
+              <p className="text-lg mb-2"><strong>ICU Admit:</strong> {exam.icu_admit ? 'Yes' : 'No'}</p>
+              <p className="text-lg mb-2"><strong>Number of ICU Admits:</strong> {exam.number_icu_admits}</p>
+              <p className="text-lg mb-2"><strong>Mortality:</strong> {exam.mortality ? 'Yes' : 'No'}</p>
             </>
           )}
           {/* Additional analysis data can go here */}
@@ -204,30 +254,6 @@ const ExamDetail = (props) => {
           <button type="submit" className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">Submit Comment</button>
         </form>
 
-        </div>
-      </div>
-  
-      {/* Additional Dashboard Features */}
-      <div className="mt-6">
-        <h2 className="text-2xl font-semibold mb-4">Additional Features</h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {/* Feature 1: Medical History */}
-          <div className="bg-white shadow-lg rounded-lg p-4">
-            <h3 className="text-xl font-semibold mb-2">Medical History</h3>
-            {/* Content */}
-          </div>
-  
-          {/* Feature 2: Treatment Plan */}
-          <div className="bg-white shadow-lg rounded-lg p-4">
-            <h3 className="text-xl font-semibold mb-2">Treatment Plan</h3>
-            {/* Content */}
-          </div>
-  
-          {/* Feature 3: Appointment Scheduling */}
-          <div className="bg-white shadow-lg rounded-lg p-4">
-            <h3 className="text-xl font-semibold mb-2">Appointment Scheduling</h3>
-            {/* Content */}
-          </div>
         </div>
       </div>
     </div>
