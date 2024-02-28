@@ -14,6 +14,7 @@ const exam = require('../models/exam-model');
 
 //get a single exam - based _id
  const getSingleExam=async(req,res)=>{
+  
     const{ id}= req.params
     let exams;
     try {
