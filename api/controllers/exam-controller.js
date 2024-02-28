@@ -39,7 +39,6 @@ const getExams = async (req, res) => {
   }
 }
 
-
 //create a new exam
 const createExam= async(req,res) =>{
     try{
@@ -68,9 +67,9 @@ const updateExam= async (req, res) => {
     try {
       const { id } = req.params;
       const updates = req.body;
-      
       // Find the exam by ID and update it
       //return the updated document
+      console.log('updates',updates)
       const updatedExam = await exam.findByIdAndUpdate(id, updates, { new: true });
       
       if (!updatedExam) {

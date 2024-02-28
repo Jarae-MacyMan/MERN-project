@@ -8,13 +8,28 @@ function classNames(...classes) {
 }
 
 export default function ListView({ exams, isAdmin }) {
-  const handleDelete = (examId) => {
+  const handleDelete = async (examId) => {
     // Show confirmation dialog
     if (window.confirm("Are you sure you want to delete this exam?")) {
-      // Delete the exam
-      console.log(`Deleting exam with ID: ${examId}`);
+      try {
+        // Delete the exam asynchronously
+        const response = await fetch(`http://localhost:9000/exams/${examId}`, {
+          method: "DELETE",
+        });
+
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        // Refresh the page
+        window.location.reload();
+      }
+      catch (error) {
+        console.error("Error during fetch:", error);
+      }
     }
   };
+
 
   return (
     <ul className="divide-y divide-gray-100">
@@ -24,8 +39,8 @@ export default function ListView({ exams, isAdmin }) {
           <Link to={`/exam/${exam._id}`} className="flex items-center hover:bg-gray-100 rounded-lg p-3 flex-grow gap-x-2">
             <img
               className="max-h-12 max-w-12 bg-gray-50 rounded-lg object-cover object-center flex-none"
-              src={exam.imageURL}
-              alt=""
+              src={`/images/${exam.png_filename}`}
+              alt="Image"
             />
             <div className="min-w-0 flex-auto">
               <span className="text-sm font-semibold leading-6 text-gray-900">Patient ID: </span>
@@ -38,8 +53,9 @@ export default function ListView({ exams, isAdmin }) {
               <div className="mt-1 flex flex-col text-xs leading-5 text-gray-500">
                 <span>Exam ID: {exam.exam_id}</span>
                 <span>Age: {exam.age} - Sex: {exam.sex}</span>
-                <span>Zip Code: {exam.zipCode}</span>
-                <span>BMI: {exam.bmi}</span>
+                <span>Zip Code: {exam.zip}</span>
+                <span>BMI: {exam.latest_bmi}</span>
+                <span>Weight: {exam.latest_weight}</span>
                 <span>ICU Admit: {exam.icu_admit === 1 ? 'True' : 'False'}</span>
                 <span>Number ICU Admits: {exam.number_icu_admits}</span>
                 <span>Mortality: {exam.mortality ? 'True' : 'False'}</span>
