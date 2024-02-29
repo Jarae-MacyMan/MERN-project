@@ -18,7 +18,11 @@ const ExamDetail = (props) => {
 
   //COMMENT FEATURE
   const [comment, setComment] = useState(''); // State to hold the current comment
-  const [comments, setComments] = useState([]); // State to hold all comments
+  const [comments, _setComments] = useState(localStorage.getItem('comments') ? JSON.parse(localStorage.getItem('comments')) : []); // State to hold all comments
+    const setComments = (comments) => {
+      localStorage.setItem('comments', JSON.stringify(comments));
+      _setComments(comments);
+    };
 
   const handleCommentSubmit = (e) => {
     e.preventDefault();
@@ -33,10 +37,20 @@ const ExamDetail = (props) => {
         second: '2-digit'
       });
       const newComment = `${formattedDate}: ${comment}`;
-      setComments([...comments, newComment]);
+      setComments({
+          ...comments,
+          [examId]: [...(comments[examId] || []), newComment]
+        });
       setComment(''); // Clear the comment input after submission
     }
   };
+
+  const deleteComment = (examId, index) => {
+    setComments({
+      ...comments,
+      [examId]: comments[examId].filter((_, i) => i !== index)
+    });
+  }
   // END OF COMMENT FEATURE
 
   useEffect(() => {
@@ -239,8 +253,12 @@ const ExamDetail = (props) => {
           {/* Additional analysis data can go here */}
         
                   {/* Display Comments */}
-        {comments.map((cmt, index) => (
-          <p key={index} className="text-sm mt-2">{cmt}</p>
+        { (comments[examId] || []).map((cmt, index) => (
+            <span styles={{display: 'inline'}} key={index}>
+          <p key={index} className="text-sm mt-2">{cmt}
+          <button className="text-red-500 ml-2" onClick={() => deleteComment(examId, index)}>Delete</button>
+          </p>
+          </span>
         ))}
 
         {/* Comment Feature */}
@@ -261,3 +279,4 @@ const ExamDetail = (props) => {
 };
 
 export default ExamDetail;
+
