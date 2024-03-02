@@ -41,11 +41,6 @@ const navigation = [
   { name: "Admin", href: "/admin", icon: UsersIcon, current: false },
 ];
 
-const teams = [
-  { id: 1, name: "Heroicons", href: "#", initial: "H", current: false },
-  { id: 2, name: "Tailwind Labs", href: "#", initial: "T", current: false },
-  { id: 3, name: "Workcation", href: "#", initial: "W", current: false },
-];
 const userNavigation = [
   { name: "Your profile", href: "#" },
   { name: "Sign out", href: "#" },
@@ -55,14 +50,14 @@ function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
 }
 
-const Homescreen = () => {
+const Homescreen = (props) => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [searchInput, setSearchInput] = useState("");
   const { allExams } = useContext(ExamsContext);
   const array_of_exams = Object.values(allExams);
   const { isAdmin, toggleAdmin } = useAdmin(); // Use the admin context
   const location = useLocation();
-
+  
   useEffect(() => {
     // Check if the current path is '/admin' and isAdmin is false
     if (location.pathname === '/admin' && !isAdmin) {
@@ -175,15 +170,15 @@ const Homescreen = () => {
                         </li>
                         <li>
                           <div className="text-xs font-semibold leading-6 text-gray-400">
-                            Your teams
+                            History
                           </div>
                           <ul role="list" className="-mx-2 mt-2 space-y-1">
-                            {teams.map((team) => (
-                              <li key={team.name}>
+                            {props.history.map((exam) => (
+                              <li key={exam.name}>
                                 <a
-                                  href={team.href}
+                                  href={exam.href}
                                   className={classNames(
-                                    team.current
+                                    exam.current
                                       ? "bg-gray-50 text-indigo-600"
                                       : "text-gray-700 hover:text-indigo-600 hover:bg-gray-50",
                                     "group flex gap-x-3 rounded-md p-2 text-sm leading-6 font-semibold"
@@ -191,15 +186,15 @@ const Homescreen = () => {
                                 >
                                   <span
                                     className={classNames(
-                                      team.current
+                                      exam.current
                                         ? "text-indigo-600 border-indigo-600"
                                         : "text-gray-400 border-gray-200 group-hover:border-indigo-600 group-hover:text-indigo-600",
                                       "flex h-6 w-6 shrink-0 items-center justify-center rounded-lg border text-[0.625rem] font-medium bg-white"
                                     )}
                                   >
-                                    {team.initial}
+                                    {exam.initial}
                                   </span>
-                                  <span className="truncate">{team.name}</span>
+                                  <span className="truncate">{exam.name}</span>
                                 </a>
                               </li>
                             ))}
@@ -270,35 +265,37 @@ const Homescreen = () => {
                 </li>
                 <li>
                   <div className="text-xs font-semibold leading-6 text-gray-400">
-                    Your teams
+                    History
                   </div>
-                  <ul role="list" className="-mx-2 mt-2 space-y-1">
-                    {teams.map((team) => (
-                      <li key={team.name}>
-                        <a
-                          href={team.href}
-                          className={classNames(
-                            team.current
-                              ? "bg-gray-50 text-indigo-600"
-                              : "text-gray-700 hover:text-indigo-600 hover:bg-gray-50",
-                            "group flex gap-x-3 rounded-md p-2 text-sm leading-6 font-semibold"
-                          )}
-                        >
-                          <span
-                            className={classNames(
-                              team.current
-                                ? "text-indigo-600 border-indigo-600"
-                                : "text-gray-400 border-gray-200 group-hover:border-indigo-600 group-hover:text-indigo-600",
-                              "flex h-6 w-6 shrink-0 items-center justify-center rounded-lg border text-[0.625rem] font-medium bg-white"
-                            )}
-                          >
-                            {team.initial}
-                          </span>
-                          <span className="truncate">{team.name}</span>
-                        </a>
-                      </li>
-                    ))}
-                  </ul>
+                    <ul role="list" className="-mx-2 mt-2 space-y-1">
+                      {props.history.map((exam) => (
+                        // needs to be changed for deployment
+                        <Link to={`/exam/${exam._id}`}>
+                          <li key={exam._id}>
+                            <div
+                              className={classNames(
+                                exam.current
+                                  ? "bg-gray-50 text-indigo-600"
+                                  : "text-gray-700 hover:text-indigo-600 hover:bg-gray-50",
+                                "group flex gap-x-3 rounded-md p-2 text-sm leading-6 font-semibold"
+                              )}
+                            >
+                              <img
+                                alt={`Patient ${exam.patientId}`}
+                                src={`/images/${exam.png_filename}`}
+                                className={classNames(
+                                  exam.current
+                                    ? "text-indigo-600 border-indigo-600"
+                                    : "text-gray-400 border-gray-200 group-hover:border-indigo-600 group-hover:text-indigo-600",
+                                  "flex h-6 w-6 shrink-0 items-center justify-center rounded-lg border text-[0.625rem] font-medium bg-white"
+                                )}
+                              />
+                              <span className="truncate">{exam.patient_id}</span>
+                            </div>
+                          </li>
+                        </Link>
+                      ))}
+                    </ul>
                 </li>
                 <li className="mt-auto">
                   <a

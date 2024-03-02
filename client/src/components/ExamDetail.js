@@ -16,34 +16,34 @@ const ExamDetail = (props) => {
   const [formData, setFormData] = useState({});
   const [isImageModalOpen, setIsImageModalOpen] = useState(false);
 
-    //COMMENT FEATURE
-    const [comment, setComment] = useState(''); // State to hold the current comment
-    const [comments, _setComments] = useState(localStorage.getItem('comments') ? JSON.parse(localStorage.getItem('comments')) : []); // State to hold all comments
+  //COMMENT FEATURE
+  const [comment, setComment] = useState(''); // State to hold the current comment
+  const [comments, _setComments] = useState(localStorage.getItem('comments') ? JSON.parse(localStorage.getItem('comments')) : []); // State to hold all comments
     const setComments = (comments) => {
       localStorage.setItem('comments', JSON.stringify(comments));
       _setComments(comments);
     };
-  
-    const handleCommentSubmit = (e) => {
-      e.preventDefault();
-      if (comment.trim()) {
-        const currentDate = new Date();
-        const formattedDate = currentDate.toLocaleDateString('en-US', {
-          year: 'numeric',
-          month: 'long',
-          day: 'numeric',
-          hour: '2-digit',
-          minute: '2-digit',
-          second: '2-digit'
-        });
-        const newComment = `${formattedDate}: ${comment}`;
-        setComments({
+
+  const handleCommentSubmit = (e) => {
+    e.preventDefault();
+    if (comment.trim()) {
+      const currentDate = new Date();
+      const formattedDate = currentDate.toLocaleDateString('en-US', {
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit',
+        second: '2-digit'
+      });
+      const newComment = `${formattedDate}: ${comment}`;
+      setComments({
           ...comments,
           [examId]: [...(comments[examId] || []), newComment]
         });
-        setComment(''); // Clear the comment input after submission
-      }
-    };
+      setComment(''); // Clear the comment input after submission
+    }
+  };
 
   const deleteComment = (examId, index) => {
     setComments({
@@ -51,8 +51,8 @@ const ExamDetail = (props) => {
       [examId]: comments[examId].filter((_, i) => i !== index)
     });
   }
-    // END OF COMMENT FEATURE
-  
+  // END OF COMMENT FEATURE
+
   useEffect(() => {
     const fetchExam = async () => {
       await loadExam(examId);
@@ -60,7 +60,7 @@ const ExamDetail = (props) => {
     };
     fetchExam();
   }, [loadExam, examId]);
-
+  
   useEffect(() => {
     // Check if editMode is true and data is loaded, then set the formData
     if (editMode && currentExam) {
@@ -68,6 +68,16 @@ const ExamDetail = (props) => {
     }
   }, [editMode, currentExam]);
 
+  useEffect(() => {
+    if (!loading && exam) {
+      const history = props.history
+      const setHistory = props.setHistory
+      const filtered = history.filter((current) => current._id !== exam._id)
+      setHistory([exam, ...filtered]);
+      // history.length > 5 ? setHistory(history.filter((current) => current._id !== history[history.length - 1]._id)) : console.log(history.length)
+    }
+  }, [loading, exam])
+  
   // If exam is still loading, it will be null so we need to check for that
   var exam = null;
   if (loading) {
