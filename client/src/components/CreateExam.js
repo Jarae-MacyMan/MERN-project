@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ExamsContext } from './ExamsProvider';
 
+const baseUrl = process.env.REACT_APP_BASE_URL;
+
 const CreateExam = () => {
   const [formData, setFormData] = useState({
     patient_id: '',

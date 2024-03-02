@@ -1,5 +1,7 @@
 import { useState, useEffect } from 'react';
 
+const baseUrl = process.env.REACT_APP_BASE_URL;
+
 const API_ROOT = `${baseUrl}/`;
 
 export function useApi({ path } = { path: '' }) {

@@ -3,6 +3,8 @@ import { Menu, Transition } from "@headlessui/react";
 import { EllipsisVerticalIcon } from "@heroicons/react/20/solid";
 import { Link, redirect } from "react-router-dom";
 
+const baseUrl = process.env.REACT_APP_BASE_URL;
+
 function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
 }
