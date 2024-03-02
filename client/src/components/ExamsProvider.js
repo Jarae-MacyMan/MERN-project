@@ -9,7 +9,8 @@ const baseUrl = process.env.REACT_APP_BASE_URL;
 const fetchExams = async (examId, patientId) => {
     try {
         // Construct the URL based on whether an examId/PatientID is provided
-        let url = `${baseUrl}/exams/${examId}`;
+        let url = `${baseUrl}/exams/`;
+        console.log("URL:", url);
         if (examId) {
             url = `${baseUrl}/exams/${examId}/`;
         } else if (patientId) {
