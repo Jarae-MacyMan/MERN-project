@@ -4,16 +4,16 @@ import Homescreen from './Homescreen';
 
 // Create context
 export const ExamsContext = createContext();
-
+const baseUrl = process.env.REACT_APP_BASE_URL;
 
 const fetchExams = async (examId, patientId) => {
     try {
         // Construct the URL based on whether an examId/PatientID is provided
-        let url = "http://localhost:9000/exams/";
+        let url = `${baseUrl}/exams/`
         if (examId) {
-            url = `http://localhost:9000/exams/${examId}/`;
+            url = `${baseUrl}/exams/${examId}/`;
         } else if (patientId) {
-            url = `http://localhost:9000/patients/${patientId}/`;
+            url = `${baseUrl}/patients/${patientId}/`;
         }
         const response = await fetch(url);
         if (!response.ok) {

@@ -228,7 +228,7 @@ const Homescreen = (props) => {
             <div className="flex h-16 shrink-0 items-center">
               <img
                 className="h-8 w-auto"
-                src="https://i.ibb.co/w72yF7Z/Green-Grapes-Logo.png" 
+                src="/images/Green-Grapes-Logo.png" 
                 alt="Green-Grapes-Logo" 
                 style={{ width: '50px', height: '50px' }} 
               />

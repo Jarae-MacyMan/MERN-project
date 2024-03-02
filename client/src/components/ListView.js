@@ -3,6 +3,8 @@ import { Menu, Transition } from "@headlessui/react";
 import { EllipsisVerticalIcon } from "@heroicons/react/20/solid";
 import { Link, redirect } from "react-router-dom";
 
+const baseUrl = process.env.REACT_APP_BASE_URL;
+
 function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
 }
@@ -13,7 +15,7 @@ export default function ListView({ exams, isAdmin }) {
     if (window.confirm("Are you sure you want to delete this exam?")) {
       try {
         // Delete the exam asynchronously
-        const response = await fetch(`http://localhost:9000/exams/${examId}`, {
+        const response = await fetch(`${baseUrl}/exams/${examId}`, {
           method: "DELETE",
         });
 

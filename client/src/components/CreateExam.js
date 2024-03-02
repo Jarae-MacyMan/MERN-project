@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ExamsContext } from './ExamsProvider';
 
+const baseUrl = process.env.REACT_APP_BASE_URL;
+
 const CreateExam = () => {
   const [formData, setFormData] = useState({
     patient_id: '',
@@ -30,7 +32,7 @@ const CreateExam = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await fetch('http://localhost:9000/exams/', {
+      const response = await fetch(`${baseUrl}/exams/`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
