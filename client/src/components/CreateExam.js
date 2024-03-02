@@ -30,7 +30,7 @@ const CreateExam = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await fetch('http://localhost:9000/exams/', {
+      const response = await fetch(`${baseUrl}/exams/`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'

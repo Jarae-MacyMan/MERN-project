@@ -13,7 +13,7 @@ export default function ListView({ exams, isAdmin }) {
     if (window.confirm("Are you sure you want to delete this exam?")) {
       try {
         // Delete the exam asynchronously
-        const response = await fetch(`http://localhost:9000/exams/${examId}`, {
+        const response = await fetch(`${baseUrl}/exams/${examId}`, {
           method: "DELETE",
         });
 

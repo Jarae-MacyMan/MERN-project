@@ -122,7 +122,7 @@ const ExamDetail = (props) => {
   
   const handleSubmit = async () => {
     try {
-        const response = await fetch(`http://localhost:9000/exams/${examId}`, {
+        const response = await fetch(`${baseUrl}/exams/${examId}`, {
             method: "PATCH",
             headers: {
                 "Content-Type": "application/json",
@@ -149,7 +149,7 @@ const ExamDetail = (props) => {
     if (window.confirm("Are you sure you want to delete this exam?")) {
       try {
         // Delete the exam asynchronously
-        const response = await fetch(`http://localhost:9000/exams/${examId}`, {
+        const response = await fetch(`${baseUrl}/exams/${examId}`, {
           method: "DELETE",
         });
 
